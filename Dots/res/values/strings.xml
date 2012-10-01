@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">Dots</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Dots</string>
+    <string name="new_game_button">New Game</string>
+    <string name="resume_game_button">Resume Game</string>
+    <string name="exit_button">Exit</string>
+    <string name="player_one_score">Player One: 0</string>
+    <string name="player_two_score">Player Two: 0</string>
+    <string name="player_turn">Player One\'s Turn</string>
+    <string name="undo_button">Undo</string>
+    <string name="reset_button">Reset</string>
+    <string name="main_menu_button">Main Menu</string>
+
+</resources>

@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/mainScreenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="25dp"
+        android:text="@string/title_activity_main"
+        android:textSize="75sp"
+        tools:context=".MainActivity" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainScreenTitle"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" >
+
+        <Button
+            android:id="@+id/newGameButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/new_game_button" />
+
+        <Button
+            android:id="@+id/resumeGameButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/newGameButton"
+            android:layout_below="@+id/newGameButton"
+            android:layout_marginTop="25dp"
+            android:text="@string/resume_game_button" />
+
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/resumeGameButton"
+            android:layout_below="@+id/resumeGameButton"
+            android:layout_marginTop="25dp"
+            android:text="@string/exit_button" />
+    </RelativeLayout>
+
+</RelativeLayout>
