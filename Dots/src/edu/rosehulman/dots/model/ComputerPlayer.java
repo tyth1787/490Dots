@@ -1,4 +1,6 @@
-package edu.rosehulman.dots;
+package edu.rosehulman.dots.model;
+
+import java.util.List;
 
 public class ComputerPlayer extends Player {
 
@@ -8,7 +10,8 @@ public class ComputerPlayer extends Player {
 
 	// AI STUFF
 	@Override
-	public void move() {
+	public List<Line> move() {
 
+		return null;
 	}
 }

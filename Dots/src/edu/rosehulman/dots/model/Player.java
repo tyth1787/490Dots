@@ -1,8 +1,14 @@
-package edu.rosehulman.dots;
+package edu.rosehulman.dots.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Color;
 
 public abstract class Player {
 	private String name;
 	private int score;
+	private Color color;
 
 	public Player(String playerName) {
 		name = playerName;
@@ -28,8 +34,9 @@ public abstract class Player {
 		score++;
 	}
 
-	public void move() {
+	public List<Line> move() {
 
+		return new ArrayList<Line>();
 	}
 
 }

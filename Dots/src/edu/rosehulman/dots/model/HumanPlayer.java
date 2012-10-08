@@ -1,4 +1,4 @@
-package edu.rosehulman.dots;
+package edu.rosehulman.dots.model;
 
 public class HumanPlayer extends Player {
 
