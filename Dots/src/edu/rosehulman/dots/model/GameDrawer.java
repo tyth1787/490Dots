@@ -35,7 +35,6 @@ public class GameDrawer extends View {
 		height = h;
 		lines = new ArrayList<Line>();
 		squares = new ArrayList<Square>();
-		squares.add(new Square(40, 40, 0));
 
 	}
 
@@ -48,29 +47,13 @@ public class GameDrawer extends View {
 	}
 
 	private void drawLines(Canvas canvas) {
-		if (lines.size() == 0) {
-			Point a = new Point(40, 40, 0, 0);
-			Point b = new Point(40, 40 + yDistanceBetweenDots, 0, 1);
-			Point c = new Point(40 + xDistanceBetweenDots,
-					40 + yDistanceBetweenDots, 0, 1);
-			Point d = new Point(40 + xDistanceBetweenDots, 40, 0, 0);
-			lines.add(new Line(a, b));
-			lines.add(new Line(b, c));
-			lines.add(new Line(c, d));
-			lines.add(new Line(d, a));
-		}
+		
 		paint.setStrokeWidth(BORDER_STROKE);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(getResources().getColor(R.color.black));
 
 		for (Line l : lines) {
-			int x1 = l.getA().x;
-			int y1 = l.getA().y;
-			int x2 = l.getB().x;
-			int y2 = l.getB().y;
-			Log.d("DOTS", "Drawing line at " + x1 + ", " + y1 + " - " + x2
-					+ ", " + y2);
-			canvas.drawLine(l.getA().x, l.getA().y, l.getB().x, l.getB().y,
+			canvas.drawLine(l.getA().ordX, l.getA().ordY, l.getB().ordX, l.getB().ordY,
 					paint);
 		}
 	}
@@ -118,7 +101,7 @@ public class GameDrawer extends View {
 			xPosition = xPadding + xDistanceBetweenDots * i;
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
-				points.add(new Point(xPosition, yPosition,i, z));
+				points.add(new Point(xPosition, yPosition));
 				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
 		}
@@ -127,8 +110,7 @@ public class GameDrawer extends View {
 	private void drawDots(Canvas canvas) {
 		paint.setColor(getResources().getColor(R.color.black));
 		for (Point p : points) {
-			Log.d("DOTS", "Drawing point at " + p.getX() + ", " + p.getY());
-			canvas.drawCircle(p.getX(), p.getY(), DOT_SIZE, paint);
+			canvas.drawCircle(p.ordX, p.ordY, DOT_SIZE, paint);
 
 		}
 	}

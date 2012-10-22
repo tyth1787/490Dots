@@ -22,7 +22,9 @@ import edu.rosehulman.dots.model.Line;
 import edu.rosehulman.dots.model.Player;
 import edu.rosehulman.dots.model.Point;
 import edu.rosehulman.dots.model.Square;
-public class DotsGameActivity extends Activity implements OnClickListener, OnTouchListener {
+
+public class DotsGameActivity extends Activity implements OnClickListener,
+		OnTouchListener {
 	final int PLAYER_1_TURN = 0;
 	final int PLAYER_2_TURN = 1;
 	final int GAME_OVER = -1;
@@ -77,23 +79,26 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 					new HumanPlayer(playerTwo) };
 		}
 
-		// create the drawer
-		drawer = new GameDrawer(getApplicationContext(), mGridSize, mGridSize);
-		drawer.setOnTouchListener(this);
-
-		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
-
 		initGame();
+		
+
+
 		updateView();
 	}
 
 	private void initGame() {
 		// init
-				gameState = PLAYER_1_TURN;
-				lines = new ArrayList<Line>();
-				squares = new ArrayList<Square>();
-				
-				mScores = new Integer[] { 0, 0 };
+		gameState = PLAYER_1_TURN;
+		lines = new ArrayList<Line>();
+		squares = new ArrayList<Square>();
+		// create the drawer
+		drawer = new GameDrawer(getApplicationContext(), mGridSize, mGridSize);
+		drawer.setOnTouchListener(this);
+		points = drawer.getPoints();
+
+		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
+
+		mScores = new Integer[] { 0, 0 };
 	}
 
 	private void updateView() {
@@ -101,40 +106,39 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 				.getName() + ": " + mScores[0]);
 		((TextView) findViewById(R.id.playerTwoScore)).setText(playerList[1]
 				.getName() + ": " + mScores[1]);
-		((TextView) findViewById(R.id.currentPlayersTurnText)).setText(playerList[gameState].getName() + "'s Turn");
+		((TextView) findViewById(R.id.currentPlayersTurnText))
+				.setText(playerList[gameState].getName() + "'s Turn");
+		drawer.invalidate();
 	}
 
 	private void addLine(Line l) {
-		if (inLines(l.getA().ordX, l.getA().ordY, l.getB().ordX, l.getB().ordY) != null){
-			//the line already exists
+		if (inLines(l.getA().ordX, l.getA().ordY, l.getB().ordX, l.getB().ordY) != null) {
+			Log.d("DOTS", "Line already exists at (" + l.getA().ordX + ", " + l.getB().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
 			return;
 		}
+		if (l.getA().ordX > l.getB().ordX || l.getA().ordY > l.getB().ordY)
+			l.swapPoints();
 		lines.add(l);
 		drawer.addLine(l);
 		// get the ordinal location of the points on the line
 		int x1 = l.getA().ordX;
-		int x2 = l.getA().ordY;
-		int y1 = l.getB().ordX;
+		int y1 = l.getA().ordY;
+		int x2 = l.getB().ordX;
 		int y2 = l.getB().ordY;
 
 		int pointsScored = 0;
 
 		if (y1 == y2) { // horizontal line
-			// make sure x1 is on the left
-			if (x2 > x1) {
-				int temp = x2;
-				x2 = x1;
-				x1 = temp;
-			}
 			// top square
 			if (y1 > 0) {
+				
 				Line a = inLines(x1, y1, x1, y1 - 1);
 				Line b = inLines(x1, y1 - 1, x2, y1 - 1);
 				Line c = inLines(x2, y2, x2, y2 - 1);
 
 				if (a != null && b != null && c != null) {
-					
-					Square s = new Square(findMin(x1, x2), findMin(y1, y1 - 1),gameState);
+
+					Square s = new Square(a,b,c,l,gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
@@ -147,7 +151,7 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 				Line c = inLines(x2, y2, x2, y2 + 1);
 
 				if (a != null && b != null && c != null) {
-					Square s = new Square(findMin(x1, x2), findMin(y1, y1 + 1),gameState);
+					Square s = new Square(a,b,c,l,gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
@@ -156,12 +160,7 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 			}
 
 		} else { // vertical line
-					// make sure y1 is on the top
-			if (y2 < y1) {
-				int temp = y2;
-				y2 = y1;
-				y1 = temp;
-			}
+					
 			// left square
 			if (x1 > 0) {
 				Line a = inLines(x1, y1, x1 - 1, y1);
@@ -169,7 +168,7 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 				Line c = inLines(x2, y2, x2 - 1, y2);
 
 				if (a != null && b != null && c != null) {
-					Square s = new Square(findMin(x1, x1 - 1), findMin(y1, y2),gameState);
+					Square s = new Square(a,b,c,l,gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
@@ -181,7 +180,7 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 				Line b = inLines(x1 + 1, y1, x2 + 1, y2);
 				Line c = inLines(x2, y2, x2 + 1, y2);
 				if (a != null && b != null && c != null) {
-					Square s = new Square(findMin(x1, x1 + 1), findMin(y1, y2),gameState);
+					Square s = new Square(a,b,c,l,gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
@@ -192,9 +191,9 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 
 		// add score
 		mScores[gameState] += pointsScored;
-		
-		//progress player
-		if (pointsScored == 0){
+
+		// progress player
+		if (pointsScored == 0) {
 			gameState++;
 			if (gameState == mNumPlayers)
 				gameState = 0;
@@ -204,26 +203,22 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 		checkGameOver();
 
 	}
-	
-	private int findMin(int a, int b){
-		if (a < b)
-			return a;
-		return b;
-	}
+
+	
 
 	private void checkGameOver() {
 		// check for game over
 		if (squares.size() == (mGridSize - 1) * (mGridSize - 1)) {
 			gameState = GAME_OVER;
+			// TODO: disable touching
 
+			// set player win text
+			String newText = playerList[getHighestScoreIndex()].getName()
+					+ " wins!";
+			((TextView) findViewById(R.id.currentPlayersTurnText))
+					.setText(newText);
 		}
 
-		// TODO: disable touching
-
-		// set player win text
-		String newText = playerList[getHighestScoreIndex()].getName()
-				+ " wins!";
-		((TextView) findViewById(R.id.currentPlayersTurnText)).setText(newText);
 	}
 
 	private int getHighestScoreIndex() {
@@ -237,14 +232,11 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 		}
 		return index;
 	}
+	
 
 	private Line inLines(int x, int y, int i, int j) {
 		for (Line line : lines) {
-			if (line.getA().ordX == x && line.getA().ordY == y
-					&& line.getB().ordX == i && line.getB().ordY == j)
-				return line;
-			if (line.getB().ordX == x && line.getB().ordY == y
-					&& line.getA().ordX == i && line.getA().ordY == j)
+			if (line.equals(new Line(new Point(x,y), new Point(i,j))))
 				return line;
 		}
 		return null;
@@ -260,23 +252,27 @@ public class DotsGameActivity extends Activity implements OnClickListener, OnTou
 		switch (v.getId()) {
 		case R.id.resetButton:
 			initGame();
+			updateView();
 			break;
 		}
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
 		// binary search refactor?
-		Point clicked = new Point(0, 0, (int) event.getX(), (int) event.getY());
+		Point clicked = new Point((int) event.getX(), (int) event.getY());
 		findClosestPoints(clicked);
+		
+		for (Line l : lines)
+			Log.d("DOTS", "Line from (" + l.getA().ordX + ", " + l.getA().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
 
 		return false;
 	}
 
 	public void findClosestPoints(Point clicked) {
 		double shortestDistance = Double.MAX_VALUE;
-		Point closestPoint = new Point(0, 0, 0, 0);
+		Point closestPoint = new Point(0, 0);
 		double secondShortestDistance = Double.MAX_VALUE;
-		Point secondClosestPoint = new Point(0, 0, 0, 0);
+		Point secondClosestPoint = new Point(0, 0);
 		for (int i = 0; i < points.size(); i++) {
 			Point point = points.get(i);
 			double distance = point.getDistanceFrom(clicked);
