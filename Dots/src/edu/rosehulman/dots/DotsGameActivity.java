@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,8 +19,8 @@ import edu.rosehulman.dots.model.GameDrawer;
 import edu.rosehulman.dots.model.HumanPlayer;
 import edu.rosehulman.dots.model.Line;
 import edu.rosehulman.dots.model.Player;
+import edu.rosehulman.dots.model.Point;
 import edu.rosehulman.dots.model.Square;
-
 public class DotsGameActivity extends Activity implements OnClickListener {
 	final int PLAYER_1_TURN = 0;
 	final int PLAYER_2_TURN = 1;
@@ -35,6 +36,7 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 
 	List<Line> lines;
 	List<Square> squares;
+	private List<Point> points;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,8 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 
 		// listeners
 		((Button) findViewById(R.id.resetButton)).setOnClickListener(this);
-
-		
+		gameState = PLAYER_1_TURN;
+		lines = new ArrayList<Line>();
 
 		// get the extras
 		Intent intent = getIntent();
@@ -65,7 +67,7 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 		if (playerTwo.equals(""))
 			playerTwo = "Player 2";
 
-		
+		mScores = new Integer[] { 0, 0 };
 		if (mNumPlayers == 1) {
 			playerList = new Player[] { new HumanPlayer(playerOne),
 					new ComputerPlayer(playerTwo) };
@@ -211,6 +213,7 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 		// check for game over
 		if (squares.size() == (mGridSize - 1) * (mGridSize - 1)) {
 			gameState = GAME_OVER;
+
 		}
 
 		// TODO: disable touching
@@ -257,7 +260,40 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 			initGame();
 			break;
 		}
+	}
 
+	public boolean onTouch(View v, MotionEvent event) {
+		// binary search refactor?
+		Point clicked = new Point(0, 0, (int) event.getX(), (int) event.getY());
+		findClosestPoints(clicked);
+
+		return false;
+	}
+
+	public void findClosestPoints(Point clicked) {
+		double shortestDistance = Double.MAX_VALUE;
+		Point closestPoint = new Point(0, 0, 0, 0);
+		double secondShortestDistance = Double.MAX_VALUE;
+		Point secondClosestPoint = new Point(0, 0, 0, 0);
+		for (int i = 0; i < points.size(); i++) {
+			Point point = points.get(i);
+			double distance = point.getDistanceFrom(clicked);
+			if (distance < shortestDistance) {
+				secondShortestDistance = shortestDistance;
+				secondClosestPoint = closestPoint;
+				shortestDistance = distance;
+				closestPoint = point;
+			} else if (distance < secondShortestDistance) {
+				secondShortestDistance = distance;
+				secondClosestPoint = point;
+			}
+		}
+		Log.d("dots", "clicked point = " + clicked.ordX + "," + clicked.ordY);
+		Log.d("dots", "closest point = " + closestPoint.ordX + ","
+				+ closestPoint.ordY);
+		Log.d("dots", "second closest point = " + secondClosestPoint.ordX + ","
+				+ secondClosestPoint.ordY);
+		addLine(new Line(closestPoint, secondClosestPoint));
 	}
 
 }

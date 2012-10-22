@@ -75,6 +75,10 @@ public class GameDrawer extends View {
 		}
 	}
 
+	public List<Point> getPoints() {
+		return points;
+	}
+
 	private void drawBorder(Canvas canvas) {
 		paint.setStrokeWidth(BORDER_STROKE);
 		paint.setStyle(Paint.Style.STROKE);
@@ -114,7 +118,7 @@ public class GameDrawer extends View {
 			xPosition = xPadding + xDistanceBetweenDots * i;
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
-				points.add(new Point(xPosition, yPosition, i, z));
+				points.add(new Point(i, z, xPosition, yPosition));
 				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
 		}
@@ -125,6 +129,7 @@ public class GameDrawer extends View {
 		for (Point p : points) {
 			Log.d("DOTS", "Drawing point at " + p.getX() + ", " + p.getY());
 			canvas.drawCircle(p.getX(), p.getY(), DOT_SIZE, paint);
+
 		}
 	}
 
