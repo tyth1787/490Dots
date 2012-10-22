@@ -3,12 +3,14 @@ package edu.rosehulman.dots.model;
 import android.graphics.Color;
 
 public class Square {
+	int player;
 	
-	Line a;
-	Line b;
-	Line c;
-	Line d;
-	Color color;
+	int left, top;
 	
+	public Square(int x, int y, int col){
+		left = x;
+		top = y;
+		player = col;
+	}	
 
 }

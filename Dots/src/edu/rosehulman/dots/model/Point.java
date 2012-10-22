@@ -6,11 +6,11 @@ public class Point {
 	public int ordX;
 	public int ordY;
 	
-	public Point(int xpos, int ypos, int pixelX, int pixelY){
+	public Point(int xpos, int ypos, int ordinalX, int ordinalY){
 		x = xpos;
 		y = ypos;
-		ordX = pixelX;
-		ordY = pixelY;
+		ordX = ordinalX;
+		ordY = ordinalY;
 	}
 
 	
