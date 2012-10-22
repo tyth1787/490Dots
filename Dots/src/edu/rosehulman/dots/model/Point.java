@@ -5,21 +5,24 @@ public class Point {
 	int y;
 	public int ordX;
 	public int ordY;
-	
-	public Point(int xpos, int ypos, int pixelX, int pixelY){
+
+	public Point(int xpos, int ypos, int pixelX, int pixelY) {
 		x = xpos;
 		y = ypos;
 		ordX = pixelX;
 		ordY = pixelY;
 	}
 
-	
-	int getX(){
+	public int getX() {
 		return x;
 	}
-	
-	int getY(){
+
+	public int getY() {
 		return y;
 	}
 
+	public double getDistanceFrom(Point p) {
+		return Math.sqrt((ordX - p.ordX) * (ordX - p.ordX) + (ordY - p.ordY)
+				* (ordY - p.ordY));
+	}
 }

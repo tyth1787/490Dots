@@ -18,7 +18,7 @@ public class GameDrawer extends View {
 	private final int PADDING = 5;
 	private final int DOT_SIZE = 3;
 	private final int BORDER_STROKE = 3;
-	
+
 	private List<Point> points;
 
 	public GameDrawer(Context context, int w, int h) {
@@ -30,6 +30,10 @@ public class GameDrawer extends View {
 	}
 
 	private void drawLines(Canvas canvas) {
+	}
+
+	public List<Point> getPoints() {
+		return points;
 	}
 
 	private void drawBorder(Canvas canvas) {
@@ -59,16 +63,15 @@ public class GameDrawer extends View {
 			xPosition = xPadding + xDistanceBetweenDots * i;
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
-				points.add(new Point(xPosition, yPosition, i, z));
+				points.add(new Point(i, z, xPosition, yPosition));
 				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
 		}
 	}
-	
-	private void drawDots(Canvas canvas){
-		for (Point p : points){
-			Log.d("DOTS", "Drawing point at " + p.getX() + ", " + p.getY());
-			canvas.drawCircle(p.getX(),p.getY(), DOT_SIZE, paint);
+
+	private void drawDots(Canvas canvas) {
+		for (Point p : points) {
+			canvas.drawCircle(p.ordX, p.ordY, DOT_SIZE, paint);
 		}
 	}
 
