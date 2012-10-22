@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_num_players">num_players</string>
+    <string name="key_grid_size">grid_size</string>
+    <string name="key_difficulty">difficulty</string>
+    <string name="key_player_1">p1</string>
+    <string name="key_player_2">p2</string>
+</resources>

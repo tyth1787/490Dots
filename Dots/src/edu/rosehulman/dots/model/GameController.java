@@ -14,6 +14,7 @@ public class GameController {
 	int height;
 	
 	GameDrawer drawer;
+	int mNumPlayers;
 	
 	public GameController(int w, int h){
 		gameState = GAMESTATES.P1TURN;
@@ -21,5 +22,17 @@ public class GameController {
 		height = h;
 		drawer = new GameDrawer(w, h);
 	}
+	
+	public void startOnePlayerHardGame(){
+		
+	}
+	public void startOnePlayerEasyGame(){
+		
+	}
+	public void startTwoPlayerGame(){
+		
+	}
+	
+	
 
 }
