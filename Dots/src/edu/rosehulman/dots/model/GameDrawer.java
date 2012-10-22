@@ -26,6 +26,10 @@ public class GameDrawer extends View {
 
 	private int xDistanceBetweenDots;
 	private int yDistanceBetweenDots;
+	
+	
+	public int getXSpace(){return xDistanceBetweenDots;}
+	public int getYSpace(){return yDistanceBetweenDots;}
 
 	public GameDrawer(Context context, int w, int h) {
 		super(context);

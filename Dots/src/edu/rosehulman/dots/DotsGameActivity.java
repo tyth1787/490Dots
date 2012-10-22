@@ -118,8 +118,6 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		}
 		if (l.getA().ordX > l.getB().ordX || l.getA().ordY > l.getB().ordY)
 			l.swapPoints();
-		lines.add(l);
-		drawer.addLine(l);
 		// get the ordinal location of the points on the line
 		int x1 = l.getA().ordX;
 		int y1 = l.getA().ordY;
@@ -127,14 +125,17 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		int y2 = l.getB().ordY;
 
 		int pointsScored = 0;
+		
+		int xSpace = drawer.getXSpace();
+		int ySpace = drawer.getYSpace();
 
 		if (y1 == y2) { // horizontal line
 			// top square
 			if (y1 > 0) {
 				
-				Line a = inLines(x1, y1, x1, y1 - 1);
-				Line b = inLines(x1, y1 - 1, x2, y1 - 1);
-				Line c = inLines(x2, y2, x2, y2 - 1);
+				Line a = inLines(x1, y1, x1, y1  - ySpace);
+				Line b = inLines(x1, y1 - ySpace, x2, y2  - ySpace);
+				Line c = inLines(x2, y2, x2, y2 - ySpace);
 
 				if (a != null && b != null && c != null) {
 
@@ -145,10 +146,9 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 				}
 			}
 			// bottom square
-			if (y1 < mGridSize) {
-				Line a = inLines(x1, y1, x1, y1 + 1);
-				Line b = inLines(x1, y1 + 1, x2, y1 + 1);
-				Line c = inLines(x2, y2, x2, y2 + 1);
+				Line a = inLines(x1, y1, x1, y1 + ySpace);
+				Line b = inLines(x1, y1 + ySpace, x2, y1 + ySpace);
+				Line c = inLines(x2, y2, x2, y2 + ySpace);
 
 				if (a != null && b != null && c != null) {
 					Square s = new Square(a,b,c,l,gameState);
@@ -157,15 +157,14 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 					pointsScored++;
 				}
 
-			}
 
 		} else { // vertical line
 					
 			// left square
 			if (x1 > 0) {
-				Line a = inLines(x1, y1, x1 - 1, y1);
-				Line b = inLines(x1 - 1, y1, x2 - 1, y2);
-				Line c = inLines(x2, y2, x2 - 1, y2);
+				Line a = inLines(x1, y1, x1 - xSpace, y1);
+				Line b = inLines(x1 - xSpace, y1, x2 - xSpace, y2);
+				Line c = inLines(x2, y2, x2 - xSpace, y2);
 
 				if (a != null && b != null && c != null) {
 					Square s = new Square(a,b,c,l,gameState);
@@ -175,10 +174,9 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 				}
 			}
 			// right square
-			if (x1 < mGridSize) {
-				Line a = inLines(x1, y1, x1 + 1, y1);
-				Line b = inLines(x1 + 1, y1, x2 + 1, y2);
-				Line c = inLines(x2, y2, x2 + 1, y2);
+				Line a = inLines(x1, y1, x1 + xSpace, y1);
+				Line b = inLines(x1 + xSpace, y1, x2 + xSpace, y2);
+				Line c = inLines(x2, y2, x2 + xSpace, y2);
 				if (a != null && b != null && c != null) {
 					Square s = new Square(a,b,c,l,gameState);
 					squares.add(s);
@@ -186,8 +184,9 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 					pointsScored++;
 				}
 
-			}
 		}
+		lines.add(l);
+		drawer.addLine(l);
 
 		// add score
 		mScores[gameState] += pointsScored;
@@ -263,7 +262,7 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		findClosestPoints(clicked);
 		
 		for (Line l : lines)
-			Log.d("DOTS", "Line from (" + l.getA().ordX + ", " + l.getA().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
+			Log.d("DOTS", "Lines array:: (" + l.getA().ordX + ", " + l.getA().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
 
 		return false;
 	}

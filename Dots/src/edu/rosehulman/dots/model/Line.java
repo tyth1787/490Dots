@@ -28,7 +28,7 @@ public class Line{
 	}
 
 	public boolean equals(Line l) {
-		return ((l.getA().equals(l.getA()) && l.getB().equals(l.getB())) || (l.getA().equals(l.getB()) && l.getB().equals(l.getA())));
+		return ((l.a.equals(a) && l.b.equals(b)) || (l.a.equals(b) && l.b.equals(a)));
 
 	}
 }
