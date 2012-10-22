@@ -1,13 +1,11 @@
 package edu.rosehulman.dots;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.rosehulman.dots.model.ComputerPlayer;
 import edu.rosehulman.dots.model.GameDrawer;
@@ -52,7 +50,12 @@ public class DotsGameActivity extends Activity {
 		}
 		
 		//create the drawer
-		drawer = new GameDrawer(mGridSize, mGridSize);
+		drawer = new GameDrawer(getApplicationContext());
+		drawer.setHeight(mGridSize);
+		drawer.setWidth(mGridSize);
+		
+		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
+		
 		
 		updateView();
 	}
