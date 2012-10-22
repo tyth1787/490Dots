@@ -50,9 +50,7 @@ public class DotsGameActivity extends Activity {
 		}
 		
 		//create the drawer
-		drawer = new GameDrawer(getApplicationContext());
-		drawer.setHeight(mGridSize);
-		drawer.setWidth(mGridSize);
+		drawer = new GameDrawer(getApplicationContext(), mGridSize, mGridSize);
 		
 		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
 		

@@ -1,8 +1,12 @@
 package edu.rosehulman.dots.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 import edu.rosehulman.dots.R;
 
@@ -14,10 +18,15 @@ public class GameDrawer extends View {
 	private final int PADDING = 5;
 	private final int DOT_SIZE = 3;
 	private final int BORDER_STROKE = 3;
+	
+	private List<Point> points;
 
-	public GameDrawer(Context context) {
+	public GameDrawer(Context context, int w, int h) {
 		super(context);
 		paint = new Paint();
+		points = new ArrayList<Point>();
+		width = w;
+		height = h;
 	}
 
 	private void drawLines(Canvas canvas) {
@@ -35,7 +44,7 @@ public class GameDrawer extends View {
 
 	}
 
-	private void drawDots(Canvas canvas) {
+	private void initDots() {
 		int extraPaddingFromBorder = PADDING + BORDER_STROKE;
 		int xDistanceBetweenDots = (getWidth() - extraPaddingFromBorder * 2)
 				/ width + 1;
@@ -50,13 +59,23 @@ public class GameDrawer extends View {
 			xPosition = xPadding + xDistanceBetweenDots * i;
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
-				canvas.drawCircle(xPosition, yPosition, DOT_SIZE, paint);
+				points.add(new Point(xPosition, yPosition));
+				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
+		}
+	}
+	
+	private void drawDots(Canvas canvas){
+		for (Point p : points){
+			Log.d("DOTS", "Drawing point at " + p.getX() + ", " + p.getY());
+			canvas.drawCircle(p.getX(),p.getY(), DOT_SIZE, paint);
 		}
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
+		if (points.size() == 0)
+			initDots();
 		drawLines(canvas);
 		drawSquares(canvas);
 		drawDots(canvas);
