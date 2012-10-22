@@ -1,14 +1,19 @@
 package edu.rosehulman.dots.model;
 
 public class Line {
-
+	
 	Point a;
 	Point b;
 	
-	Point getPointA(){
+	public Line (Point x, Point y){
+		a = x;
+		b = y;
+	}
+	
+	public Point getA(){
 		return a;
 	}
-	Point getPointB(){
+	public Point getB(){
 		return b;
 	}
 }

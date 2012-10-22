@@ -59,7 +59,7 @@ public class GameDrawer extends View {
 			xPosition = xPadding + xDistanceBetweenDots * i;
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
-				points.add(new Point(xPosition, yPosition));
+				points.add(new Point(xPosition, yPosition, i, z));
 				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
 		}
