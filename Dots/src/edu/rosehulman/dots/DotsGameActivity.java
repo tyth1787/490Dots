@@ -48,6 +48,8 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 
 		// listeners
 		((Button) findViewById(R.id.resetButton)).setOnClickListener(this);
+		((Button) findViewById(R.id.mainMenuButton)).setOnClickListener(this);
+		((Button) findViewById(R.id.undoButton)).setOnClickListener(this);
 		gameState = PLAYER_1_TURN;
 		lines = new ArrayList<Line>();
 
@@ -80,8 +82,6 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		}
 
 		initGame();
-		
-
 
 		updateView();
 	}
@@ -113,7 +113,10 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 
 	private void addLine(Line l) {
 		if (inLines(l.getA().ordX, l.getA().ordY, l.getB().ordX, l.getB().ordY) != null) {
-			Log.d("DOTS", "Line already exists at (" + l.getA().ordX + ", " + l.getB().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
+			Log.d("DOTS",
+					"Line already exists at (" + l.getA().ordX + ", "
+							+ l.getB().ordY + ") to (" + l.getB().ordX + ", "
+							+ l.getB().ordY + ")");
 			return;
 		}
 		if (l.getA().ordX > l.getB().ordX || l.getA().ordY > l.getB().ordY)
@@ -125,41 +128,40 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		int y2 = l.getB().ordY;
 
 		int pointsScored = 0;
-		
+
 		int xSpace = drawer.getXSpace();
 		int ySpace = drawer.getYSpace();
 
 		if (y1 == y2) { // horizontal line
 			// top square
 			if (y1 > 0) {
-				
-				Line a = inLines(x1, y1, x1, y1  - ySpace);
-				Line b = inLines(x1, y1 - ySpace, x2, y2  - ySpace);
+
+				Line a = inLines(x1, y1, x1, y1 - ySpace);
+				Line b = inLines(x1, y1 - ySpace, x2, y2 - ySpace);
 				Line c = inLines(x2, y2, x2, y2 - ySpace);
 
 				if (a != null && b != null && c != null) {
 
-					Square s = new Square(a,b,c,l,gameState);
+					Square s = new Square(a, b, c, l, gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
 				}
 			}
 			// bottom square
-				Line a = inLines(x1, y1, x1, y1 + ySpace);
-				Line b = inLines(x1, y1 + ySpace, x2, y1 + ySpace);
-				Line c = inLines(x2, y2, x2, y2 + ySpace);
+			Line a = inLines(x1, y1, x1, y1 + ySpace);
+			Line b = inLines(x1, y1 + ySpace, x2, y1 + ySpace);
+			Line c = inLines(x2, y2, x2, y2 + ySpace);
 
-				if (a != null && b != null && c != null) {
-					Square s = new Square(a,b,c,l,gameState);
-					squares.add(s);
-					drawer.addSquare(s);
-					pointsScored++;
-				}
-
+			if (a != null && b != null && c != null) {
+				Square s = new Square(a, b, c, l, gameState);
+				squares.add(s);
+				drawer.addSquare(s);
+				pointsScored++;
+			}
 
 		} else { // vertical line
-					
+
 			// left square
 			if (x1 > 0) {
 				Line a = inLines(x1, y1, x1 - xSpace, y1);
@@ -167,22 +169,22 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 				Line c = inLines(x2, y2, x2 - xSpace, y2);
 
 				if (a != null && b != null && c != null) {
-					Square s = new Square(a,b,c,l,gameState);
+					Square s = new Square(a, b, c, l, gameState);
 					squares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
 				}
 			}
 			// right square
-				Line a = inLines(x1, y1, x1 + xSpace, y1);
-				Line b = inLines(x1 + xSpace, y1, x2 + xSpace, y2);
-				Line c = inLines(x2, y2, x2 + xSpace, y2);
-				if (a != null && b != null && c != null) {
-					Square s = new Square(a,b,c,l,gameState);
-					squares.add(s);
-					drawer.addSquare(s);
-					pointsScored++;
-				}
+			Line a = inLines(x1, y1, x1 + xSpace, y1);
+			Line b = inLines(x1 + xSpace, y1, x2 + xSpace, y2);
+			Line c = inLines(x2, y2, x2 + xSpace, y2);
+			if (a != null && b != null && c != null) {
+				Square s = new Square(a, b, c, l, gameState);
+				squares.add(s);
+				drawer.addSquare(s);
+				pointsScored++;
+			}
 
 		}
 		lines.add(l);
@@ -203,8 +205,6 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 
 	}
 
-	
-
 	private void checkGameOver() {
 		// check for game over
 		if (squares.size() == (mGridSize - 1) * (mGridSize - 1)) {
@@ -212,8 +212,13 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			// TODO: disable touching
 
 			// set player win text
-			String newText = playerList[getHighestScoreIndex()].getName()
-					+ " wins!";
+			String newText = "";
+			int highestScoreIndex = getHighestScoreIndex();
+			if (highestScoreIndex != -1) {
+				newText = playerList[highestScoreIndex].getName() + " wins!";
+			} else {
+				newText = "Tie Game!";
+			}
 			((TextView) findViewById(R.id.currentPlayersTurnText))
 					.setText(newText);
 		}
@@ -224,6 +229,11 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		int index = 0;
 		int currentHighest = mScores[0];
 		for (int i = 1; i < mScores.length; i++) {
+			// need to check for all of them but since only two players at the
+			// moment...
+			if (mScores[i] == currentHighest) {
+				return -1;
+			}
 			if (mScores[i] > currentHighest) {
 				currentHighest = mScores[i];
 				index = i;
@@ -231,11 +241,10 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		}
 		return index;
 	}
-	
 
 	private Line inLines(int x, int y, int i, int j) {
 		for (Line line : lines) {
-			if (line.equals(new Line(new Point(x,y), new Point(i,j))))
+			if (line.equals(new Line(new Point(x, y), new Point(i, j))))
 				return line;
 		}
 		return null;
@@ -253,16 +262,30 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			initGame();
 			updateView();
 			break;
+		case R.id.mainMenuButton:
+			Intent result = new Intent();
+			setResult(Activity.RESULT_OK, result);
+			finish();
+			break;
+		case R.id.undoButton:
+			undoTurn();
 		}
+	}
+
+	public void undoTurn() {
+
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
 		// binary search refactor?
 		Point clicked = new Point((int) event.getX(), (int) event.getY());
 		findClosestPoints(clicked);
-		
+
 		for (Line l : lines)
-			Log.d("DOTS", "Lines array:: (" + l.getA().ordX + ", " + l.getA().ordY + ") to (" + l.getB().ordX + ", " + l.getB().ordY + ")");
+			Log.d("DOTS",
+					"Lines array:: (" + l.getA().ordX + ", " + l.getA().ordY
+							+ ") to (" + l.getB().ordX + ", " + l.getB().ordY
+							+ ")");
 
 		return false;
 	}

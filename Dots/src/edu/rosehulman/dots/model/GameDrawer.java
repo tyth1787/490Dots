@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.Log;
 import android.view.View;
 import edu.rosehulman.dots.R;
@@ -26,10 +27,14 @@ public class GameDrawer extends View {
 
 	private int xDistanceBetweenDots;
 	private int yDistanceBetweenDots;
-	
-	
-	public int getXSpace(){return xDistanceBetweenDots;}
-	public int getYSpace(){return yDistanceBetweenDots;}
+
+	public int getXSpace() {
+		return xDistanceBetweenDots;
+	}
+
+	public int getYSpace() {
+		return yDistanceBetweenDots;
+	}
 
 	public GameDrawer(Context context, int w, int h) {
 		super(context);
@@ -51,14 +56,14 @@ public class GameDrawer extends View {
 	}
 
 	private void drawLines(Canvas canvas) {
-		
+
 		paint.setStrokeWidth(BORDER_STROKE);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(getResources().getColor(R.color.black));
 
 		for (Line l : lines) {
-			canvas.drawLine(l.getA().ordX, l.getA().ordY, l.getB().ordX, l.getB().ordY,
-					paint);
+			canvas.drawLine(l.getA().ordX, l.getA().ordY, l.getB().ordX,
+					l.getB().ordY, paint);
 		}
 	}
 
@@ -113,6 +118,7 @@ public class GameDrawer extends View {
 
 	private void drawDots(Canvas canvas) {
 		paint.setColor(getResources().getColor(R.color.black));
+		paint.setStyle(Style.FILL);
 		for (Point p : points) {
 			canvas.drawCircle(p.ordX, p.ordY, DOT_SIZE, paint);
 
@@ -123,9 +129,9 @@ public class GameDrawer extends View {
 	public void onDraw(Canvas canvas) {
 		if (points.size() == 0)
 			initDots();
-		drawSquares(canvas);
 		drawLines(canvas);
 		drawDots(canvas);
+		drawSquares(canvas);
 		drawBorder(canvas);
 	}
 
