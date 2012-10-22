@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import edu.rosehulman.dots.model.Line;
 import edu.rosehulman.dots.model.Player;
 import edu.rosehulman.dots.model.Point;
 import edu.rosehulman.dots.model.Square;
-public class DotsGameActivity extends Activity implements OnClickListener {
+public class DotsGameActivity extends Activity implements OnClickListener, OnTouchListener {
 	final int PLAYER_1_TURN = 0;
 	final int PLAYER_2_TURN = 1;
 	final int GAME_OVER = -1;
@@ -78,6 +79,7 @@ public class DotsGameActivity extends Activity implements OnClickListener {
 
 		// create the drawer
 		drawer = new GameDrawer(getApplicationContext(), mGridSize, mGridSize);
+		drawer.setOnTouchListener(this);
 
 		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
 
