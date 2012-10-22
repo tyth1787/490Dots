@@ -33,12 +33,12 @@ public class NewGameActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		Intent newIntent = null;
-		
-		//get the grid size
+
+		// get the grid size
 		Spinner spinner = ((Spinner) findViewById(R.id.gridSize));
 		int gridSize = 0;
-		switch(spinner.getSelectedItemPosition()){
-		case 0: //Large
+		switch (spinner.getSelectedItemPosition()) {
+		case 0: // Large
 			gridSize = 10;
 			break;
 		case 1: // Medium
@@ -48,18 +48,20 @@ public class NewGameActivity extends Activity implements OnClickListener {
 			gridSize = 5;
 			break;
 		}
-		
+
 		newIntent = new Intent(this, DotsGameActivity.class);
 		newIntent.putExtra(getString(R.string.key_grid_size), gridSize);
-		EditText namePlayerOne =  ((EditText)findViewById(R.id.playerName1));
-		EditText namePlayerTwo =  ((EditText)findViewById(R.id.playerName2));
-		
-		Log.d("DOTS", "player 1: " + namePlayerOne.getText() + "\n player 2: " + namePlayerTwo);
-		
-		newIntent.putExtra(getString(R.string.key_player_1),namePlayerOne.getText().toString());
-		newIntent.putExtra(getString(R.string.key_player_2), namePlayerTwo.getText().toString());
-		
-		
+		EditText namePlayerOne = ((EditText) findViewById(R.id.playerName1));
+		EditText namePlayerTwo = ((EditText) findViewById(R.id.playerName2));
+
+		Log.d("DOTS", "player 1: " + namePlayerOne.getText() + "\n player 2: "
+				+ namePlayerTwo);
+
+		newIntent.putExtra(getString(R.string.key_player_1), namePlayerOne
+				.getText().toString());
+		newIntent.putExtra(getString(R.string.key_player_2), namePlayerTwo
+				.getText().toString());
+
 		switch (v.getId()) {
 		case R.id.onePlayerEasy:
 			newIntent.putExtra(getString(R.string.key_num_players), 1);
@@ -72,11 +74,17 @@ public class NewGameActivity extends Activity implements OnClickListener {
 		case R.id.twoPlayer:
 			newIntent.putExtra(getString(R.string.key_num_players), 2);
 			break;
-			default:
-				return;
+		default:
+			return;
 		}
-		
+
 		startActivity(newIntent);
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+		}
 	}
 }
