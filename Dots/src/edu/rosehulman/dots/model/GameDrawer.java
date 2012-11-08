@@ -5,10 +5,12 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import edu.rosehulman.dots.R;
 
 public class GameDrawer extends View {
@@ -35,6 +37,8 @@ public class GameDrawer extends View {
 	public int getYSpace() {
 		return yDistanceBetweenDots;
 	}
+	
+	private int size;
 
 	public GameDrawer(Context context, int w, int h) {
 		super(context);
@@ -44,7 +48,6 @@ public class GameDrawer extends View {
 		height = h;
 		lines = new ArrayList<Line>();
 		squares = new ArrayList<Square>();
-
 	}
 
 	public void addLine(Line l) {
@@ -75,7 +78,7 @@ public class GameDrawer extends View {
 		paint.setStrokeWidth(BORDER_STROKE);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(getResources().getColor(R.color.black));
-		canvas.drawRect(PADDING, PADDING, getWidth() - PADDING, getHeight()
+		canvas.drawRect(PADDING, PADDING, size - PADDING, size
 				- PADDING, paint);
 	}
 
@@ -97,9 +100,10 @@ public class GameDrawer extends View {
 
 	private void initDots() {
 		int extraPaddingFromBorder = PADDING + BORDER_STROKE;
-		xDistanceBetweenDots = (getWidth() - extraPaddingFromBorder * 2)
+		size = (getWidth() < getHeight() ? getWidth() : getHeight());
+		xDistanceBetweenDots = (size - extraPaddingFromBorder * 2)
 				/ width + 1;
-		yDistanceBetweenDots = (getHeight() - extraPaddingFromBorder * 2)
+		yDistanceBetweenDots = (size - extraPaddingFromBorder * 2)
 				/ height + 1;
 
 		int xPosition;
@@ -111,7 +115,7 @@ public class GameDrawer extends View {
 			for (int z = 0; z < height; z++) {
 				yPosition = yPadding + yDistanceBetweenDots * z;
 				points.add(new Point(xPosition, yPosition));
-				Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
+				//Log.d("DOTS", "Adding point at " + xPosition + ", " + yPosition);
 			}
 		}
 	}
@@ -127,11 +131,14 @@ public class GameDrawer extends View {
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		if (points.size() == 0)
+		if (points.size() == 0){
 			initDots();
+			this.setLayoutParams(new LinearLayout.LayoutParams(getSize(), getSize()));
+		}
+		Log.d("dots", "Width = " + getWidth() + " Height = " + getHeight());
+		drawSquares(canvas);
 		drawLines(canvas);
 		drawDots(canvas);
-		drawSquares(canvas);
 		drawBorder(canvas);
 	}
 
@@ -143,6 +150,9 @@ public class GameDrawer extends View {
 		this.width = width;
 	}
 
+	public int getSize(){
+		return (getWidth() < getHeight() ? getWidth() : getHeight());
+	}
 	public int getViewHeight() {
 		return height;
 	}

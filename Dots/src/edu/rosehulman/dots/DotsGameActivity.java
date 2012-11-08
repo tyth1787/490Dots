@@ -45,6 +45,8 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dots_game);
+		
+		
 
 		// listeners
 		((Button) findViewById(R.id.resetButton)).setOnClickListener(this);
@@ -97,6 +99,7 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		points = drawer.getPoints();
 
 		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
+		Log.d("dots", "Width = " + ((LinearLayout) findViewById(R.id.gameArea)).getWidth());
 
 		mScores = new Integer[] { 0, 0 };
 	}
