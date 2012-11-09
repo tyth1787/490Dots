@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <ListPreference 
+        android:entries="@array/colors" 
+        android:entryValues="@array/color_ints"
+        android:key="@string/p1color"
+        android:defaultValue="0"
+        android:title="@string/player_1_color"/>
+    <ListPreference 
+        android:entries="@array/colors" 
+        android:entryValues="@array/color_ints"
+        android:key="@string/p2color"
+        android:defaultValue="1"
+        android:title="@string/player_2_color"/>
+    
+
+</PreferenceScreen>

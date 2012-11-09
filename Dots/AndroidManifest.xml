@@ -28,6 +28,9 @@
             android:name=".NewGameActivity"
             android:label="@string/title_activity_main" >
         </activity>
+        <activity 
+            android:name=".PlayerPreferences"
+            android:label="@string/player_preferences" />
     </application>
 
 </manifest>

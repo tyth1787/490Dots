@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +30,7 @@ import edu.rosehulman.dots.model.Player;
 import edu.rosehulman.dots.model.Point;
 import edu.rosehulman.dots.model.Square;
 
-public class DotsGameActivity extends Activity implements OnClickListener,
+public class DotsGameActivity extends FragmentActivity implements OnClickListener,
 		OnTouchListener {
 	final int PLAYER_1_TURN = 0;
 	final int PLAYER_2_TURN = 1;
@@ -40,20 +47,24 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 	List<Line> lines;
 	List<Square> squares;
 	private List<Point> points;
+	
+	private Line addedLine;
+	private ArrayList<Square> addedSquares;
+	private int lastGameState;
+
+	boolean initialized = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dots_game);
-		
-		
 
 		// listeners
 		((Button) findViewById(R.id.resetButton)).setOnClickListener(this);
 		((Button) findViewById(R.id.mainMenuButton)).setOnClickListener(this);
 		((Button) findViewById(R.id.undoButton)).setOnClickListener(this);
-		gameState = PLAYER_1_TURN;
-		lines = new ArrayList<Line>();
+		((Button) findViewById(R.id.help_button)).setOnClickListener(this);
+		((Button) findViewById(R.id.undoButton)).setEnabled(false);
 
 		// get the extras
 		Intent intent = getIntent();
@@ -73,17 +84,24 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			playerOne = "Player 1";
 		if (playerTwo.equals(""))
 			playerTwo = "Player 2";
+		Log.d("DOTS", "Initialized = " + initialized);
+		if (!initialized) {
+			gameState = PLAYER_1_TURN;
+			lines = new ArrayList<Line>();
 
-		mScores = new Integer[] { 0, 0 };
-		if (mNumPlayers == 1) {
-			playerList = new Player[] { new HumanPlayer(playerOne),
-					new ComputerPlayer(playerTwo) };
-		} else {
-			playerList = new Player[] { new HumanPlayer(playerOne),
-					new HumanPlayer(playerTwo) };
+			mScores = new Integer[] { 0, 0 };
+			if (mNumPlayers == 1) {
+				playerList = new Player[] { new HumanPlayer(playerOne),
+						new ComputerPlayer(playerTwo) };
+			} else {
+				playerList = new Player[] { new HumanPlayer(playerOne),
+						new HumanPlayer(playerTwo) };
+			}
+			addedSquares = new ArrayList<Square>();
+
+			initGame();
+			initialized = true;
 		}
-
-		initGame();
 
 		updateView();
 	}
@@ -99,16 +117,37 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 		points = drawer.getPoints();
 
 		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
-		Log.d("dots", "Width = " + ((LinearLayout) findViewById(R.id.gameArea)).getWidth());
+		Log.d("dots",
+				"Width = "
+						+ ((LinearLayout) findViewById(R.id.gameArea))
+								.getWidth());
 
 		mScores = new Integer[] { 0, 0 };
 	}
 
 	private void updateView() {
-		((TextView) findViewById(R.id.playerOneScore)).setText(playerList[0]
+		TextView p1 = ((TextView) findViewById(R.id.playerOneScore));
+		TextView p2 = ((TextView) findViewById(R.id.playerTwoScore));
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		
+		p1.setText(playerList[0]
 				.getName() + ": " + mScores[0]);
-		((TextView) findViewById(R.id.playerTwoScore)).setText(playerList[1]
+		p2.setText(playerList[1]
 				.getName() + ": " + mScores[1]);
+		
+		//set the color in the view
+		int p1Color = Integer.parseInt(prefs.getString(getString(R.string.p1color), "0"));
+		int p2Color = Integer.parseInt(prefs.getString(getString(R.string.p2color), "1"));
+		
+		p1.setBackgroundColor(getResources().getColor(drawer.COLORS[p1Color]));
+		p2.setBackgroundColor(getResources().getColor(drawer.COLORS[p2Color]));
+		
+		//set the colors in the drawer
+		drawer.setPlayerColor(0,p1Color);
+		drawer.setPlayerColor(1,p2Color);
+		
+		
 		((TextView) findViewById(R.id.currentPlayersTurnText))
 				.setText(playerList[gameState].getName() + "'s Turn");
 		drawer.invalidate();
@@ -147,6 +186,7 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 
 					Square s = new Square(a, b, c, l, gameState);
 					squares.add(s);
+					addedSquares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
 				}
@@ -159,6 +199,7 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			if (a != null && b != null && c != null) {
 				Square s = new Square(a, b, c, l, gameState);
 				squares.add(s);
+				addedSquares.add(s);
 				drawer.addSquare(s);
 				pointsScored++;
 			}
@@ -174,6 +215,7 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 				if (a != null && b != null && c != null) {
 					Square s = new Square(a, b, c, l, gameState);
 					squares.add(s);
+					addedSquares.add(s);
 					drawer.addSquare(s);
 					pointsScored++;
 				}
@@ -185,13 +227,16 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			if (a != null && b != null && c != null) {
 				Square s = new Square(a, b, c, l, gameState);
 				squares.add(s);
+				addedSquares.add(s);
 				drawer.addSquare(s);
 				pointsScored++;
 			}
 
 		}
 		lines.add(l);
+		addedLine = l;
 		drawer.addLine(l);
+		((Button) findViewById(R.id.undoButton)).setEnabled(true);
 
 		// add score
 		mScores[gameState] += pointsScored;
@@ -272,11 +317,39 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 			break;
 		case R.id.undoButton:
 			undoTurn();
+			break;
+		case R.id.help_button:
+			DialogFragment df = new DialogFragment() {
+				@Override
+				public Dialog onCreateDialog(Bundle savedInstanceState) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(DotsGameActivity.this);
+					builder.setTitle(R.string.help)
+					.setMessage(R.string.help_text)
+					.setPositiveButton(android.R.string.ok, null);
+					return builder.create();
+				}
+			};
+			df.show(getSupportFragmentManager(), "");
+			break;
 		}
 	}
 
 	public void undoTurn() {
-
+		
+		this.gameState = lastGameState;
+		
+		this.lines.remove(addedLine);
+		drawer.removeLine(addedLine);
+		
+		for (Square s : addedSquares){
+			squares.remove(s);
+		}
+		drawer.removeSquares(addedSquares);
+		addedSquares = new ArrayList<Square>();
+		
+		//disable the undo button
+		((Button) findViewById(R.id.undoButton)).setEnabled(false);
+		updateView();
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -290,7 +363,23 @@ public class DotsGameActivity extends Activity implements OnClickListener,
 							+ ") to (" + l.getB().ordX + ", " + l.getB().ordY
 							+ ")");
 
+		
 		return false;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_settings){
+			Intent intent = new Intent(this,PlayerPreferences.class);
+			startActivity(intent);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	protected void onResume() {
+		updateView();
+		super.onResume();
 	}
 
 	public void findClosestPoints(Point clicked) {

@@ -18,9 +18,13 @@ public class GameDrawer extends View {
 	int height = 5;
 	int boxHeight;
 	Paint paint;
+	int[] playerColors = {0,1};
 	private final int PADDING = 5;
 	private final int DOT_SIZE = 3;
 	private final int BORDER_STROKE = 3;
+	
+	final public int[] COLORS = {R.color.red, R.color.blue, R.color.green, R.color.Orange};
+	
 
 	private List<Point> points;
 
@@ -86,10 +90,8 @@ public class GameDrawer extends View {
 		paint.setStrokeWidth(BORDER_STROKE);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		for (Square s : squares) {
-			if (s.player == 0)
-				paint.setColor(getResources().getColor(R.color.red));
-			else
-				paint.setColor(getResources().getColor(R.color.blue));
+			paint.setColor(getResources().getColor(COLORS[playerColors[s.player]]));
+			//paint.setColor(COLORS[playerColors[s.player]]);
 
 			canvas.drawRect(s.left, s.top, s.left + xDistanceBetweenDots, s.top
 					+ yDistanceBetweenDots, paint);
@@ -127,6 +129,15 @@ public class GameDrawer extends View {
 			canvas.drawCircle(p.ordX, p.ordY, DOT_SIZE, paint);
 
 		}
+	}
+	public void removeSquares(List<Square> slist){
+		for (Square s : slist){
+			this.squares.remove(s);
+		}
+	}
+	
+	public void removeLine(Line l){
+		this.lines.remove(l);
 	}
 
 	@Override
@@ -167,6 +178,10 @@ public class GameDrawer extends View {
 
 	public void setBoxHeight(int boxHeight) {
 		this.boxHeight = boxHeight;
+	}
+
+	public void setPlayerColor(int player, int color){
+		this.playerColors[player] = color;
 	}
 
 }

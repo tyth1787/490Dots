@@ -19,5 +19,12 @@
     <string name="one_player_easy_button">One Player Easy</string>
     <string name="one_player_hard_button">One Player Hard</string>
     <string name="start_game">Start Game</string>
+    <string name="player_1_color">Player 1 Color</string>
+    <string name="player_2_color">Player 2 Color</string>
+    <string name="p1color">p1color</string>
+    <string name="p2color">p2color</string>
+    <string name="player_preferences">Player Preferences</string>
+    <string name="help">Help</string>
+    <string name="help_text">Touch between two dots to create a line there.  If a player successfully creates a box, he or she will take another turn.</string>
 
 </resources>

@@ -89,6 +89,15 @@
         android:layout_toRightOf="@+id/resetButton"
         android:textSize="32sp"
         android:text="@string/main_menu_button" />
+    
+    <Button
+        android:id="@+id/help_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/mainMenuButton"
+        android:layout_alignParentBottom="true"
+        android:textSize="32sp"
+        android:text="@string/help" />
     </RelativeLayout>
 
 </RelativeLayout>
