@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:text="@string/new_game_button"
+        android:textSize="55sp" />
+
+    <EditText
+        android:id="@+id/playerName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:ems="6"
+        android:hint="@string/player_one_name" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/playerName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/playerName1"
+        android:layout_alignBottom="@+id/playerName1"
+        android:layout_alignRight="@+id/textView1"
+        android:ems="6"
+        android:hint="@string/player_two_name" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/playerName1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/grid_size"
+        android:textSize="25sp" />
+
+    <Spinner
+        android:id="@+id/gridSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView2"
+        android:layout_centerHorizontal="true"
+        android:entries="@array/grid_sizes" />
+
+    <Button
+        android:id="@+id/twoPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/onePlayerHard"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/onePlayerHard"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/two_player_button" />
+
+    <Button
+        android:id="@+id/onePlayerHard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/twoPlayer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/one_player_hard_button" />
+
+    <Button
+        android:id="@+id/onePlayerEasy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/onePlayerHard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/one_player_easy_button" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/onePlayerEasy"
+        android:layout_centerHorizontal="true"
+        android:text="@string/start_game"
+        android:textSize="25sp" />
+
+</RelativeLayout>
