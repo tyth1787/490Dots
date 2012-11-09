@@ -116,6 +116,7 @@ public class DotsGameActivity extends FragmentActivity implements OnClickListene
 		drawer.setOnTouchListener(this);
 		points = drawer.getPoints();
 
+		((LinearLayout) findViewById(R.id.gameArea)).removeAllViews();
 		((LinearLayout) findViewById(R.id.gameArea)).addView(drawer);
 		Log.d("dots",
 				"Width = "
@@ -170,6 +171,7 @@ public class DotsGameActivity extends FragmentActivity implements OnClickListene
 		int y2 = l.getB().ordY;
 
 		int pointsScored = 0;
+		addedSquares = new ArrayList<Square>();
 
 		int xSpace = drawer.getXSpace();
 		int ySpace = drawer.getYSpace();
@@ -336,6 +338,7 @@ public class DotsGameActivity extends FragmentActivity implements OnClickListene
 
 	public void undoTurn() {
 		
+		this.mScores[gameState] -= addedSquares.size();
 		this.gameState = lastGameState;
 		
 		this.lines.remove(addedLine);
